@@ -1,0 +1,18 @@
+﻿{
+    "include": [
+        "src/**/*"
+    ],
+    "compilerOptions": {
+        "isolatedModules": true,
+        "rootDir": "src",
+        "moduleResolution": "Bundler",
+        "outDir": "dist",
+        "declaration": true,
+        "declarationDir": "dist",
+        "strict": true,
+        "target": "ESNext",
+        "skipLibCheck": true,
+        "module": "ESNext",
+        "esModuleInterop": true
+    }
+}
