@@ -1,0 +1,37 @@
+{
+    "name": "@akkun/logger",
+    "version": "1.0.0",
+    "type": "module",
+    "main": "./dist/index.js",
+    "types": "./dist/index.d.ts",
+    "exports": {
+        ".": {
+            "types": "./dist/index.d.ts",
+            "import": "./dist/index.js"
+        },
+        "./node": {
+            "types": "./dist/node.d.ts",
+            "import": "./dist/node.js"
+        }
+    },
+    "scripts": {
+        "build": "tsc --emitDeclarationOnly && esbuild src/index.ts --bundle --outfile=dist/index.js --platform=neutral --external:express --format=esm && esbuild src/node.ts --bundle --outfile=dist/node.js --platform=node --external:express --format=esm",
+        "dev": "tsx watch src/index.ts",
+        "check": "tsc --noEmit"
+    },
+    "devDependencies": {
+        "@types/node": "^25.5.0",
+        "@types/express": "^5.0.6",
+        "esbuild": "^0.27.4",
+        "tsx": "^4.21.0",
+        "typescript": "^5.9.3"
+    },
+    "peerDependencies": {
+        "express": ">=4.0.0"
+    },
+    "peerDependenciesMeta": {
+        "express": {
+            "optional": true
+        }
+    }
+}
