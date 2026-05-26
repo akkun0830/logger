@@ -1,0 +1,44 @@
+name: Build and Release
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "lts/*"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Deploy to release branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          # releaseブランチ用の一時ディレクトリを作成
+          mkdir /tmp/release
+          cp -r dist/ /tmp/release/
+          cp package.json /tmp/release/
+
+          # releaseブランチをクリーンな状態で作成
+          git checkout --orphan release
+          git rm -rf .
+
+          # 必要なファイルだけコピー
+          cp -r /tmp/release/dist ./dist
+          cp /tmp/release/package.json ./package.json
+
+          git add dist/ package.json
+          git commit -m "release: $(date +'%Y-%m-%d %H:%M:%S')"
+          git push origin release --force
