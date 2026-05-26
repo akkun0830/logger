@@ -8,10 +8,12 @@ on:
 jobs:
   release:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write # 追加：releaseブランチへのpush権限
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5 # v5に更新
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5 # v5に更新
         with:
           node-version: "lts/*"
 
@@ -25,20 +27,13 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-
-          # releaseブランチ用の一時ディレクトリを作成
           mkdir /tmp/release
           cp -r dist/ /tmp/release/
           cp package.json /tmp/release/
-
-          # releaseブランチをクリーンな状態で作成
           git checkout --orphan release
           git rm -rf .
-
-          # 必要なファイルだけコピー
           cp -r /tmp/release/dist ./dist
           cp /tmp/release/package.json ./package.json
-
           git add dist/ package.json
           git commit -m "release: $(date +'%Y-%m-%d %H:%M:%S')"
           git push origin release --force
